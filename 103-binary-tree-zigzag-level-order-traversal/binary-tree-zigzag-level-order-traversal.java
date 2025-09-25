@@ -15,32 +15,31 @@
  */
 class Solution {
     public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
-        List<List<Integer>> zigzag= new ArrayList<>();
-        if(root==null) return zigzag;
-        Queue<TreeNode> queue= new LinkedList<>();
-        queue.add(root);
-        boolean flag=false;
-        while(!queue.isEmpty()){
-            int size= queue.size();
-            List<Integer> level= new ArrayList<>();
-            Stack<Integer> reverseStack= new Stack<>();
-
-            for(int i=0; i<size; i++){
-                TreeNode node= queue.poll();
-                if(flag){
-                    reverseStack.add(node.val);
-                }else{
-                    level.add(node.val);
+        List<List<Integer>> result= new ArrayList<>();
+        if(root==null) return result;
+        Queue<TreeNode> q1= new LinkedList<>();
+        q1.offer(root);
+        int counter=0;
+        while(!q1.isEmpty()){
+            List<Integer> shortlist= new ArrayList<>();
+            counter++;
+            int len=q1.size();
+            
+            for(int i=0; i<len; i++){
+                TreeNode node=q1.poll();
+                shortlist.add(node.val);
+                if(node.left!=null){
+                    q1.offer(node.left);
                 }
-                if(node.left!=null) queue.add(node.left);
-                if(node.right!=null) queue.add(node.right);
+                if(node.right!=null){
+                    q1.offer(node.right);
+                }
             }
-            flag=!flag;
-            while(!reverseStack.isEmpty()){
-                level.add(reverseStack.pop());
+            if(counter%2==0){
+                Collections.reverse(shortlist);
             }
-            zigzag.add(level);
+            result.add(shortlist);
         }
-        return zigzag;
+        return result;
     }
 }
